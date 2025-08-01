@@ -1,0 +1,10 @@
+langchain
+langchain-openai
+langchain-groq
+langchain-google-genai
+ipykernel
+langchain-text-splitters
+langchain-community
+faiss-cpu
+streamlit
+pypdf
