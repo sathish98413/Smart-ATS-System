@@ -3,7 +3,7 @@ import tempfile
 import json
 
 from utils.utils import load_pdf
-from RAGPipeline.rag_pipeline import get_match_analysis
+from RAGPipeline.rag_pipeline import create_vector_db, get_match_analysis
 
 st.set_page_config(page_title="AI ATS Resume Screener", layout="wide")
 
@@ -52,7 +52,18 @@ if st.sidebar.button("🚀 Run ATS Screening"):
             docs = load_pdf(file_path)
             resume_text = " ".join([d.page_content for d in docs])
 
-            analysis = get_match_analysis(jd_input, resume_text)
+
+
+            # CREATE VECTOR DB (NOW USED PROPERLY)
+            db = create_vector_db(resume_text)
+
+            retriever = db.as_retriever(search_kwargs={"k": 20})
+
+            relevant_docs = retriever.invoke(jd_input)
+
+            resume_context = " ".join([d.page_content for d in relevant_docs])
+
+            analysis = get_match_analysis(jd_input, resume_context)
 
             try:
                 parsed = json.loads(analysis)

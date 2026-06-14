@@ -11,12 +11,13 @@ llm = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
 
 def create_vector_db(docs):
     splitter = RecursiveCharacterTextSplitter(
-        chunk_size=300,
+        chunk_size=500,
         chunk_overlap=50
     )
 
-    chunks = splitter.split_documents(docs)
-    return FAISS.from_documents(chunks, embeddings)
+    chunks = splitter.split_text(docs)
+ 
+    return FAISS.from_texts(chunks, embeddings)
 
 
 def get_match_analysis(jd_text, resume_text):
@@ -41,6 +42,10 @@ def get_match_analysis(jd_text, resume_text):
         Resume:
         {resume_text}
         """
+    
+    print("testing jd text", jd_text)
+    print("testing resume text", resume_text)
+
 
     response = llm.invoke(prompt)
     return response.content
